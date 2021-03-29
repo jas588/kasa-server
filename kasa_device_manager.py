@@ -56,13 +56,15 @@ class KasaDeviceManager:
 
     # Public methods
     def get_devices(self):
-        minified_devices = {}
+        minified_devices = []
 
         for ip_address, smart_device in self.devices.items():
             asyncio.run(smart_device.update())
-            minified_devices[ip_address] = {"name": smart_device.alias, "is_on": smart_device.is_on}
+            minified_device = {"name": smart_device.alias, "ip_address": ip_address, "is_on": smart_device.is_on}
+            minified_devices.append(minified_device)
 
-        return minified_devices
+        devices = {"devices": minified_devices} # TODO: Make Flask function handle error
+        return devices
 
 
     def toggle_plug_by_ip(self, ip_address):

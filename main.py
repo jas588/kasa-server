@@ -10,5 +10,5 @@ if __name__ == "__main__":
     # kasaDeviceManager.print_devices()
 
     # kasaDeviceManager.toggle_plug_by_ip("192.168.1.107")
-    # kasaDeviceManager.toggle_plug_by_name("jj")
+    # kasaDeviceManager.toggle_plug_by_name("family room plug")
     print(kasaDeviceManager.get_devices())
