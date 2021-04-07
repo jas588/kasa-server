@@ -12,7 +12,7 @@ class KasaDeviceManager:
         self.devices = self._discover_devices()
         # self._print_devices()
 
-        print(f"Finished initializing")
+        print("Finished initializing")
 
 
     # Private methods
@@ -20,7 +20,6 @@ class KasaDeviceManager:
         devices = asyncio.run(kasa.Discover.discover(return_raw=json))
         
         return devices
-
 
     def _print_devices(self):
         for ip_address, smart_device in self.devices.items():
@@ -30,28 +29,27 @@ class KasaDeviceManager:
 
         print("\n")
 
+    def _turn_off_device(self, device: kasa.SmartDevice):
+        print(f"Turning {device.alias} off")
 
-    def _turn_off_plug(self, plug: kasa.SmartPlug):
-        print(f"Turning {plug.alias} off")
+        asyncio.run(device.turn_off())
 
-        asyncio.run(plug.turn_off())
+        return True
 
-        return {"name": plug.alias, "state": "off"}
+    def _turn_on_device(self, device: kasa.SmartDevice):
+        print(f"Turning {device.alias} on")
 
-    def _turn_on_plug(self, plug: kasa.SmartPlug):
-        print(f"Turning {plug.alias} on")
+        asyncio.run(device.turn_on())
 
-        asyncio.run(plug.turn_on())
+        return True
 
-        return {"name": plug.alias, "state": "on"}
+    def _toggle_device(self, device: kasa.SmartDevice):
+        asyncio.run(device.update())
 
-    def _toggle_plug(self, plug: kasa.SmartPlug):
-        asyncio.run(plug.update())
-
-        if plug.is_on:
-            return self._turn_off_plug(plug)
+        if device.is_on:
+            return self._turn_off_device(device)
         else:
-            return self._turn_on_plug(plug)
+            return self._turn_on_device(device)
 
 
     # Public methods
@@ -63,25 +61,19 @@ class KasaDeviceManager:
             minified_device = {"name": smart_device.alias, "ip_address": ip_address, "is_on": smart_device.is_on}
             minified_devices.append(minified_device)
 
-        devices = {"devices": minified_devices} # TODO: Make Flask function handle error
+        devices = {"devices": minified_devices}
         return devices
 
+    def toggle_device_by_ip(self, ip_address):
+        device = kasa.SmartDevice(ip_address)
 
-    def toggle_plug_by_ip(self, ip_address):
-        plug = kasa.SmartPlug(ip_address)
-        asyncio.run(plug.update())
+        return self._toggle_device(device)
 
-        if plug.is_on:
-            return self._turn_off_plug(plug)
-        else:
-            return self._turn_on_plug(plug)
-
-
-    def toggle_plug_by_name(self, alias_name):
+    def toggle_device_by_name(self, device_name):
         for ip_address, smart_device in self.devices.items():
             asyncio.run(smart_device.update())
 
-            if alias_name.lower() == smart_device.alias.lower():
-                return self._toggle_plug(smart_device)
+            if device_name.lower() == smart_device.alias.lower():
+                return self._toggle_device(smart_device)
         
-        return {"status": "not_found"}
+        return False

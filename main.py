@@ -4,8 +4,6 @@ from kasa_device_manager import KasaDeviceManager
 
 
 if __name__ == "__main__":
-    # asyncio.run(toggle_plug())
-
     kasaDeviceManager = KasaDeviceManager()
     # kasaDeviceManager.print_devices()
 

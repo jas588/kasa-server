@@ -1,11 +1,14 @@
 # app.py
 
 from flask import Flask
+from flask import Response
+from flask import request
 from kasa_device_manager import KasaDeviceManager
-
+import json
 
 app = Flask(__name__)
 kasaDeviceManager = KasaDeviceManager()
+
 
 @app.route('/devices')
 def get_devices():
@@ -20,23 +23,45 @@ def get_devices():
           content:
             application/json:
               schema: {"devices": [{"name": string, "ip_address": string, "is_on": boolean}]}
+        404:
+            description: Returns when no devices are found
+            content:
+                application/json:
+                schema: {"error": string}
     """
-    return kasaDeviceManager.get_devices()
 
-@app.route('/toggle/plug/<string:plug_name>')
-def toggle_plug(plug_name):   
+    devices = kasaDeviceManager.get_devices()
+
+    if len(devices['devices']) == 0:
+        return Response(json.dumps({"error": "no devices found"}), status=404, mimetype='application/json')
+    else:
+        return Response(json.dumps(devices), status=200, mimetype='application/json')
+
+@app.route('/toggle/device/<string:device_name>')
+def toggle_device(device_name):   
     """
-    Toggle's a Kasa smart plug.
-    http://127.0.0.1:5000/toggle/plug/entry%20lamp%20plug
+    Toggle's a Kasa smart device.
+    http://127.0.0.1:5000/toggle/device/entry%20lamp%20plug
     ---
     GET:
-      description: Toggle's the smart plug
+      description: Toggle's the smart device
       responses:
-        200:
-          description: Returns whether the request was a success or failure 
-          content:
-            application/json:
-              schema: {"status": string}
+        204:
+          description: Returns a no content response upon success
+        404:
+            description: Returns when a device with that name is not found
+            content:
+                application/json:
+                schema: {"error": string}
     """ 
-    response = kasaDeviceManager.toggle_plug_by_name(plug_name)
-    return response
+
+    device_name2 = request.args.get('name')
+
+    print("Query params: ", device_name2)
+
+    response = kasaDeviceManager.toggle_device_by_name(device_name)
+
+    if not response:
+        return Response(json.dumps({"error": "device not found"}), status=404, mimetype='application/json')
+    else:
+        return Response('', status=204)
