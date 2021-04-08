@@ -37,11 +37,11 @@ def get_devices():
     else:
         return Response(json.dumps(devices), status=200, mimetype='application/json')
 
-@app.route('/toggle/device/<string:device_name>')
+@app.route('/devices/<string:device_name>/toggle', methods=['PUT'])
 def toggle_device(device_name):   
     """
     Toggle's a Kasa smart device.
-    http://127.0.0.1:5000/toggle/device/entry%20lamp%20plug
+    http://127.0.0.1:5000/devices/entry%20lamp%20plug/toggle
     ---
     GET:
       description: Toggle's the smart device
@@ -54,10 +54,6 @@ def toggle_device(device_name):
                 application/json:
                 schema: {"error": string}
     """ 
-
-    device_name2 = request.args.get('name')
-
-    print("Query params: ", device_name2)
 
     response = kasaDeviceManager.toggle_device_by_name(device_name)
 

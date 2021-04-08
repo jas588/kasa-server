@@ -58,7 +58,15 @@ class KasaDeviceManager:
 
         for ip_address, smart_device in self.devices.items():
             asyncio.run(smart_device.update())
-            minified_device = {"name": smart_device.alias, "ip_address": ip_address, "is_on": smart_device.is_on}
+            minified_device = {
+                "name": smart_device.alias, 
+                "ip_address": ip_address, 
+                "is_on": smart_device.is_on,
+                "_links": {
+                    # "self": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}" },
+                    "toggle": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}/toggle" }
+                }
+            }
             minified_devices.append(minified_device)
 
         devices = {"devices": minified_devices}
