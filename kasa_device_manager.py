@@ -104,3 +104,21 @@ class KasaDeviceManager:
                 return self._toggle_device(smart_device)
         
         return False
+
+    def turn_on_device_by_name(self, device_name):
+        for ip_address, smart_device in self.devices.items():
+            asyncio.run(smart_device.update())
+
+            if device_name.lower() == smart_device.alias.lower():
+                return self._turn_on_device(smart_device)
+        
+        return False
+
+    def turn_off_device_by_name(self, device_name):
+        for ip_address, smart_device in self.devices.items():
+            asyncio.run(smart_device.update())
+
+            if device_name.lower() == smart_device.alias.lower():
+                return self._turn_off_device(smart_device)
+        
+        return False

@@ -10,6 +10,7 @@ app = Flask(__name__)
 kasaDeviceManager = KasaDeviceManager()
 
 
+# Endpoints
 @app.route('/devices')
 def get_all_devices():
     """
@@ -71,7 +72,52 @@ def toggle_device(device_name):
     """ 
 
     response = kasaDeviceManager.toggle_device_by_name(device_name)
+    
+    return format_device_power_state_response(response)
 
+@app.route('/devices/<string:device_name>/on', methods=['PUT'])
+def turn_on_device(device_name):   
+    """
+    Turns on a Kasa smart device
+    http://127.0.0.1:5000/devices/entry%20lamp%20plug/on
+    ---
+    PUT:
+      responses:
+        204:
+            description: Returns a no content response upon success
+            content: application/json
+        404:
+            description: Returns an error when a device with the specified name is not found
+            content: application/json
+    """ 
+
+    response = kasaDeviceManager.turn_on_device_by_name(device_name)
+
+    return format_device_power_state_response(response)
+
+@app.route('/devices/<string:device_name>/off', methods=['PUT'])
+def turn_off_device(device_name):   
+    """
+    Turns off a Kasa smart device
+    http://127.0.0.1:5000/devices/entry%20lamp%20plug/off
+    ---
+    PUT:
+      responses:
+        204:
+            description: Returns a no content response upon success
+            content: application/json
+        404:
+            description: Returns an error when a device with the specified name is not found
+            content: application/json
+    """ 
+
+    response = kasaDeviceManager.turn_off_device_by_name(device_name)
+    
+    return format_device_power_state_response(response)
+
+
+# Helper functions
+def format_device_power_state_response(response):
     if not response:
         return Response(json.dumps({"error": "device not found"}), status=404, mimetype='application/json')
     else:
