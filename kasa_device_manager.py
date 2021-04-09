@@ -54,25 +54,12 @@ class KasaDeviceManager:
 
     # Public methods
     def get_all_devices(self):
-        minified_devices = []
+        devices = []
 
         for ip_address, smart_device in self.devices.items():
             asyncio.run(smart_device.update())
-            minified_device = {
-                "name": smart_device.alias, 
-                "ip_address": ip_address, 
-                "is_on": smart_device.is_on,
-                "_links": {
-                    "self": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}" },
-                    "toggle": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}/toggle" }
-                }
-            }
+            devices.append((smart_device, ip_address))
 
-            minified_devices.append(minified_device)
-
-        devices_hypermedia = {"_links": {"self": {"href": "/devices"}}}
-
-        devices = {"count": len(minified_devices), **devices_hypermedia, "_embedded": {"devices": minified_devices}}
         return devices
 
     def get_device(self, device_name):

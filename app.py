@@ -26,11 +26,31 @@ def get_all_devices():
             content: application/json
     """
 
-    devices = kasaDeviceManager.get_all_devices()
+    found_devices = kasaDeviceManager.get_all_devices()
 
-    if len(devices['_embedded']['devices']) == 0:
+    if len(found_devices) == 0:
         return Response(json.dumps({"error": "no devices found"}), status=404, mimetype='application/json')
     else:
+        devices = []
+        for device, ip_address in found_devices:
+            url_formatted_device_name = device.alias.replace(' ', '%20')
+            device = {
+                "name": device.alias, 
+                "ip_address": ip_address, 
+                "is_on": device.is_on,
+                "_links": {
+                    "self": { "href": f"/devices/{url_formatted_device_name}" },
+                    "toggle": { "href": f"/devices/{url_formatted_device_name}/toggle" },
+                    "on": { "href": f"/devices/{url_formatted_device_name}/on" },
+                    "off": { "href": f"/devices/{url_formatted_device_name}/off" }
+                }
+            }
+
+            devices.append(device)
+
+        devices_hypermedia = {"_links": {"self": {"href": "/devices"}}}
+        devices = {"count": len(devices), **devices_hypermedia, "_embedded": {"devices": devices}}
+
         return Response(json.dumps(devices), status=200, mimetype='application/json')
 
 @app.route('/devices/<string:device_name>')
