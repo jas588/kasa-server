@@ -57,6 +57,7 @@ class KasaDeviceManager:
         devices = []
 
         for ip_address, smart_device in self.devices.items():
+            # Updates to get the most current state of the device
             asyncio.run(smart_device.update())
             devices.append((smart_device, ip_address))
 
