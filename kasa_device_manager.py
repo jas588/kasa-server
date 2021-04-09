@@ -94,11 +94,6 @@ class KasaDeviceManager:
 
         return minified_device
 
-    def toggle_device_by_ip(self, ip_address):
-        device = kasa.SmartDevice(ip_address)
-
-        return self._toggle_device(device)
-
     def toggle_device_by_name(self, device_name):
         for ip_address, smart_device in self.devices.items():
             asyncio.run(smart_device.update())
