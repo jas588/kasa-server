@@ -85,6 +85,7 @@ class KasaDeviceManager:
                     "name": smart_device.alias, 
                     "ip_address": ip_address, 
                     "is_on": smart_device.is_on,
+                    "system_info": smart_device.sys_info,
                     "_links": {
                         "self": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}" },
                         "toggle": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}/toggle" }
