@@ -76,25 +76,14 @@ class KasaDeviceManager:
         return devices
 
     def get_device(self, device_name):
-        minified_device = None
-
         # Find the device and return the most current state of it
         for ip_address, smart_device in self.devices.items():
             asyncio.run(smart_device.update())
 
             if device_name.lower() == smart_device.alias.lower():
-                minified_device = {
-                    "name": smart_device.alias, 
-                    "ip_address": ip_address, 
-                    "is_on": smart_device.is_on,
-                    "system_info": smart_device.sys_info,
-                    "_links": {
-                        "self": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}" },
-                        "toggle": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}/toggle" }
-                    }
-                }
+                return smart_device, ip_address
 
-        return minified_device
+        return None, None
 
     def toggle_device_by_name(self, device_name):
         for ip_address, smart_device in self.devices.items():

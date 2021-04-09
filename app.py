@@ -48,11 +48,25 @@ def get_device(device_name):
             content: application/json
     """
 
-    device = kasaDeviceManager.get_device(device_name)
+    found_device, ip_address = kasaDeviceManager.get_device(device_name)
 
-    if device == None:
+    if found_device == None:
         return Response(json.dumps({"error": "no device found"}), status=404, mimetype='application/json')
     else:
+        url_formatted_device_name = found_device.alias.replace(' ', '%20')
+        device = {
+            "name": found_device.alias, 
+            "ip_address": ip_address, 
+            "is_on": found_device.is_on,
+            "system_info": found_device.sys_info,
+            "_links": {
+                "self": { "href": f"/devices/{url_formatted_device_name}" },
+                "toggle": { "href": f"/devices/{url_formatted_device_name}/toggle" },
+                "on": { "href": f"/devices/{url_formatted_device_name}/on" },
+                "off": { "href": f"/devices/{url_formatted_device_name}/off" }
+            }
+        }
+
         return Response(json.dumps(device), status=200, mimetype='application/json')
 
 @app.route('/devices/<string:device_name>/toggle', methods=['PUT'])
