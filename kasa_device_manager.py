@@ -53,7 +53,7 @@ class KasaDeviceManager:
 
 
     # Public methods
-    def get_devices(self):
+    def get_all_devices(self):
         minified_devices = []
 
         for ip_address, smart_device in self.devices.items():
@@ -63,14 +63,35 @@ class KasaDeviceManager:
                 "ip_address": ip_address, 
                 "is_on": smart_device.is_on,
                 "_links": {
-                    # "self": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}" },
+                    "self": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}" },
                     "toggle": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}/toggle" }
                 }
             }
+
             minified_devices.append(minified_device)
 
-        devices = {"devices": minified_devices}
+        devices = {"_embedded": {"devices": minified_devices}}
         return devices
+
+    def get_device(self, device_name):
+        minified_device = None
+
+        # Find the device and return the most current state of it
+        for ip_address, smart_device in self.devices.items():
+            asyncio.run(smart_device.update())
+
+            if device_name.lower() == smart_device.alias.lower():
+                minified_device = {
+                    "name": smart_device.alias, 
+                    "ip_address": ip_address, 
+                    "is_on": smart_device.is_on,
+                    "_links": {
+                        "self": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}" },
+                        "toggle": { "href": f"/devices/{smart_device.alias.replace(' ', '%20')}/toggle" }
+                    }
+                }
+
+        return minified_device
 
     def toggle_device_by_ip(self, ip_address):
         device = kasa.SmartDevice(ip_address)
