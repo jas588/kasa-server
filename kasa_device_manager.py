@@ -70,7 +70,9 @@ class KasaDeviceManager:
 
             minified_devices.append(minified_device)
 
-        devices = {"_embedded": {"devices": minified_devices}}
+        devices_hypermedia = {"_links": {"self": {"href": "/devices"}}}
+
+        devices = {"count": len(minified_devices), **devices_hypermedia, "_embedded": {"devices": minified_devices}}
         return devices
 
     def get_device(self, device_name):
