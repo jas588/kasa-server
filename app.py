@@ -5,7 +5,7 @@ from kasa_device_manager import KasaDeviceManager
 import json
 
 app = Flask(__name__)
-kasaDeviceManager = KasaDeviceManager()
+kasa_device_manager = KasaDeviceManager()
 
 
 # Endpoints
@@ -25,7 +25,7 @@ def get_all_devices():
             content: application/json
     """
 
-    found_devices = kasaDeviceManager.get_all_devices()
+    found_devices = kasa_device_manager.get_all_devices()
 
     if len(found_devices) == 0:
         return Response(json.dumps({"error": "no devices found"}), status=404, mimetype='application/json')
@@ -68,7 +68,7 @@ def get_device(device_name):
             content: application/json
     """
 
-    found_device, ip_address = kasaDeviceManager.get_device(device_name)
+    found_device, ip_address = kasa_device_manager.get_device(device_name)
 
     if found_device == None:
         return Response(json.dumps({"error": "no device found"}), status=404, mimetype='application/json')
@@ -105,7 +105,7 @@ def toggle_device(device_name):
             content: application/json
     """ 
 
-    response = kasaDeviceManager.toggle_device_by_name(device_name)
+    response = kasa_device_manager.toggle_device_by_name(device_name)
     
     return format_device_power_state_response(response)
 
@@ -125,7 +125,7 @@ def turn_on_device(device_name):
             content: application/json
     """ 
 
-    response = kasaDeviceManager.turn_on_device_by_name(device_name)
+    response = kasa_device_manager.turn_on_device_by_name(device_name)
 
     return format_device_power_state_response(response)
 
@@ -145,7 +145,7 @@ def turn_off_device(device_name):
             content: application/json
     """ 
 
-    response = kasaDeviceManager.turn_off_device_by_name(device_name)
+    response = kasa_device_manager.turn_off_device_by_name(device_name)
     
     return format_device_power_state_response(response)
 
