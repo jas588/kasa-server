@@ -1,5 +1,3 @@
-# kasa_device_manager.py
-
 import asyncio
 import kasa
 import json
@@ -16,10 +14,10 @@ class KasaDeviceManager:
 
 
     # Private methods
-    def _discover_devices(self, json=False):        
-        devices = asyncio.run(kasa.Discover.discover(return_raw=json))
+    def _discover_devices(self, json_format=False):        
+        discovered_devices = asyncio.run(kasa.Discover.discover(return_raw=json_format))
         
-        return devices
+        return discovered_devices
 
     def _print_devices(self):
         for ip_address, smart_device in self.devices.items():
@@ -57,7 +55,7 @@ class KasaDeviceManager:
         devices = []
 
         for ip_address, smart_device in self.devices.items():
-            # Updates to get the most current state of the device
+            # Update to get the most current state of the device
             asyncio.run(smart_device.update())
             devices.append((smart_device, ip_address))
 

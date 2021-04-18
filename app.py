@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask
 from flask import Response
 from flask import request
@@ -15,6 +13,7 @@ kasaDeviceManager = KasaDeviceManager()
 def get_all_devices():
     """
     Returns all the Kasa devices found in the home.
+    /devices
     ---
     GET:
       responses:
@@ -57,6 +56,7 @@ def get_all_devices():
 def get_device(device_name):
     """
     Returns the Kasa device
+    /devices/entry%20lamp%20plug
     ---
     GET:
       responses:
@@ -93,7 +93,7 @@ def get_device(device_name):
 def toggle_device(device_name):   
     """
     Toggle's a Kasa smart device
-    http://127.0.0.1:5000/devices/entry%20lamp%20plug/toggle
+    devices/entry%20lamp%20plug/toggle
     ---
     PUT:
       responses:
@@ -113,7 +113,7 @@ def toggle_device(device_name):
 def turn_on_device(device_name):   
     """
     Turns on a Kasa smart device
-    http://127.0.0.1:5000/devices/entry%20lamp%20plug/on
+    /devices/entry%20lamp%20plug/on
     ---
     PUT:
       responses:
@@ -133,7 +133,7 @@ def turn_on_device(device_name):
 def turn_off_device(device_name):   
     """
     Turns off a Kasa smart device
-    http://127.0.0.1:5000/devices/entry%20lamp%20plug/off
+    /devices/entry%20lamp%20plug/off
     ---
     PUT:
       responses:
