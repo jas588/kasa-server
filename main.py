@@ -1,14 +1,12 @@
-# main.py
-
 from kasa_device_manager import KasaDeviceManager
 
 
 if __name__ == "__main__":
-    # asyncio.run(toggle_plug())
+    kasa_device_manager = KasaDeviceManager()
 
-    kasaDeviceManager = KasaDeviceManager()
-    # kasaDeviceManager.print_devices()
+    # Print all the discovered devices out to the console
+    devices = kasa_device_manager.get_all_devices()
+    print(devices)
 
-    # kasaDeviceManager.toggle_plug_by_ip("192.168.1.107")
-    # kasaDeviceManager.toggle_plug_by_name("jj")
-    print(kasaDeviceManager.get_devices())
+    # Toggle a devices power state
+    # kasa_device_manager.toggle_device_by_name("family room plug")
