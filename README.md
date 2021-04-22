@@ -136,5 +136,9 @@ Host: 127.0.0.1:5000
 ```
 
 
+## Contributing 📝
+Please see the contributing guideline [here](CONTRIBUTING.md)
+
+
 ## License 📄
 This project uses the [MIT License](LICENSE.txt)
