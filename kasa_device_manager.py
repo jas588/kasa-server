@@ -61,6 +61,9 @@ class KasaDeviceManager:
 
         return devices
 
+    def rediscover_devices(self):
+        self.devices = self._discover_devices()
+
     def get_device(self, device_name):
         # Find the device and return the most current state of it
         for ip_address, smart_device in self.devices.items():
