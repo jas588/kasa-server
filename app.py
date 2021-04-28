@@ -82,7 +82,7 @@ def get_device(device_name):
     if found_device == None:
         return Response(json.dumps({"error": "no device found"}), status=404, mimetype='application/json')
     else:
-        device = format_device(found_device, ip_address)
+        device = format_device(found_device, ip_address, True)
 
         headers = {'Access-Control-Allow-Origin': '*'}
         return Response(json.dumps(device), status=200, mimetype='application/json', headers=headers)
@@ -149,9 +149,9 @@ def turn_off_device(device_name):
 
 
 # Helper functions
-def format_device(device, ip_address):
+def format_device(device, ip_address, include_device_sys_info=False):
     url_formatted_device_name = device.alias.replace(' ', '%20')
-    device = {
+    formatted_device = {
         "name": device.alias, 
         "ip_address": ip_address, 
         "is_on": device.is_on,
@@ -163,7 +163,10 @@ def format_device(device, ip_address):
         }
     }
 
-    return device
+    if (include_device_sys_info):
+        formatted_device = {**formatted_device, "system_info": device.sys_info}
+
+    return formatted_device
 
 def format_device_power_state_response(response):
     headers = {'Access-Control-Allow-Origin': '*'}
