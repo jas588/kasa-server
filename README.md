@@ -76,6 +76,9 @@ Host: 127.0.0.1:5000
   "_links": {
     "self": {
       "href": "/devices"
+    },
+    "rediscover": {
+      "href": "/devices/rediscover"
     }
   },
   "_embedded": {
