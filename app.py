@@ -50,7 +50,9 @@ def get_all_devices():
         devices_hypermedia = {"_links": {"self": {"href": "/devices"}}}
         devices = {"count": len(devices), **devices_hypermedia, "_embedded": {"devices": devices}}
 
-        return Response(json.dumps(devices), status=200, mimetype='application/json')
+        headers = {'Access-Control-Allow-Origin': '*'}
+
+        return Response(json.dumps(devices), status=200, mimetype='application/json', headers=headers)
 
 @app.route('/devices/<string:device_name>')
 def get_device(device_name):
@@ -87,7 +89,9 @@ def get_device(device_name):
             }
         }
 
-        return Response(json.dumps(device), status=200, mimetype='application/json')
+        headers = {'Access-Control-Allow-Origin': '*'}
+
+        return Response(json.dumps(device), status=200, mimetype='application/json', headers=headers)
 
 @app.route('/devices/<string:device_name>/toggle', methods=['PUT'])
 def toggle_device(device_name):   
@@ -105,9 +109,9 @@ def toggle_device(device_name):
             content: application/json
     """ 
 
-    response = kasa_device_manager.toggle_device_by_name(device_name)
+    toggled = kasa_device_manager.toggle_device_by_name(device_name)
     
-    return format_device_power_state_response(response)
+    return format_device_power_state_response(toggled)
 
 @app.route('/devices/<string:device_name>/on', methods=['PUT'])
 def turn_on_device(device_name):   
@@ -125,9 +129,9 @@ def turn_on_device(device_name):
             content: application/json
     """ 
 
-    response = kasa_device_manager.turn_on_device_by_name(device_name)
+    toggled = kasa_device_manager.turn_on_device_by_name(device_name)
 
-    return format_device_power_state_response(response)
+    return format_device_power_state_response(toggled)
 
 @app.route('/devices/<string:device_name>/off', methods=['PUT'])
 def turn_off_device(device_name):   
@@ -145,14 +149,16 @@ def turn_off_device(device_name):
             content: application/json
     """ 
 
-    response = kasa_device_manager.turn_off_device_by_name(device_name)
+    toggled = kasa_device_manager.turn_off_device_by_name(device_name)
     
-    return format_device_power_state_response(response)
+    return format_device_power_state_response(toggled)
 
 
 # Helper functions
 def format_device_power_state_response(response):
+    headers = {'Access-Control-Allow-Origin': '*'}
+
     if not response:
-        return Response(json.dumps({"error": "device not found"}), status=404, mimetype='application/json')
+        return Response(json.dumps({"error": "device not found"}), status=404, mimetype='application/json', headers=headers)
     else:
         return Response('', status=204)
