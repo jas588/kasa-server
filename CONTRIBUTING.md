@@ -5,9 +5,9 @@ Contributing to this project is welcomed and intended to be as straight forward 
 
 
 ## Branching
-Branch names follow kebab-case. Please branch off of `develop` for a new feature or bug fix or off of `master` for a hotfix.
+Please branch off of `develop` for a new feature or for a bug fix and off of `main` for a hotfix. Prepend a `feature/`, `bug/` or `hotfix/` to the branch name. The rest of the branch name follows kebab-case.
 
-Examples:
-- `feature-new-thing`
-- `hotfix-something-wrong`
-- `bug-squash-it`
+### Examples:
+- `feature/new-thing`
+- `hotfix/something-wrong`
+- `bug/squash-it`
